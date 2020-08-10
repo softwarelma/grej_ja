@@ -69,13 +69,30 @@ public class GrejDao {
 		GrejResponse response = new GrejResponse();
 		try {
 			logger.log(Level.INFO, "postNew - begin");
-			StringBuilder insert = new StringBuilder("insert into a (idg, idp, idc, usr, vs1, vs2) values (");
+			StringBuilder insert = new StringBuilder("insert into a (idg, idp, idc, idu, id1, id2, id3, vc1, vc2, vc3, vc4, vc5) values (");
 			insert.append(bo.getIdg());
+			insert.append(", ");
 			insert.append(bo.getIdp());
+			insert.append(", ");
 			insert.append(bo.getIdc());
-			insert.append(bo.getUsr());
-			insert.append(bo.getVs1());
-			insert.append(bo.getVs2());
+			insert.append(", ");
+			insert.append(bo.getIdu());
+			insert.append(", ");
+			insert.append(bo.getId1());
+			insert.append(", ");
+			insert.append(bo.getId2());
+			insert.append(", ");
+			insert.append(bo.getId3());
+			insert.append(", ");
+			insert.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc1()));
+			insert.append(", ");
+			insert.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc2()));
+			insert.append(", ");
+			insert.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc3()));
+			insert.append(", ");
+			insert.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc4()));
+			insert.append(", ");
+			insert.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc5()));
 			insert.append(")");
 			this.executeUpdate(insert.toString());
 			String select = "select * from a order by id desc";
@@ -102,17 +119,33 @@ public class GrejDao {
 			update.append(bo.getIdp());
 			update.append(", idc = ");
 			update.append(bo.getIdc());
-			update.append(", usr = ");
-			update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getUsr()));
-			update.append(", vs1 = ");
-			update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVs1()));
-			update.append(", vs2 = ");
-			update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVs2()));
+			update.append(", idu = ");
+			update.append(bo.getIdu());
+			update.append(", id1 = ");
+			update.append(bo.getId1());
+			update.append(", id2 = ");
+			update.append(bo.getId2());
+			update.append(", id3 = ");
+			update.append(bo.getId3());
+			update.append(", dt2 = str_to_date('");
+			update.append(bo.getDt2());
+			update.append("', '%Y-%m-%d %T')");
+			update.append(", vc1 = ");
+			update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc1()));
+			update.append(", vc2 = ");
+			update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc2()));
+			update.append(", vc3 = ");
+			update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc3()));
+			update.append(", vc4 = ");
+			update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc4()));
+			update.append(", vc5 = ");
+			update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc5()));
 			update.append(" where id = ");
 			update.append(bo.getId());
 			if (this.executeUpdate(update.toString()) == 1) {
-				response.setBo(bo);
+				GrejResponse response2 = this.get(bo.getId());
 				logger.log(Level.INFO, "putExisting - updated with id " + bo.getId());
+				return response2;
 			} else {
 				response.setError("Not updated with id " + bo.getId());
 				logger.log(Level.INFO, "putExisting - not updated with id " + bo.getId());
@@ -131,48 +164,63 @@ public class GrejDao {
 		try {
 			logger.log(Level.INFO, "patchExisting - begin");
 			bo.setDt2(EpeAppUtils.retrieveTimestamp(format));
-			String sep = "";
-			StringBuilder update = new StringBuilder("update a set ");
+			StringBuilder update = new StringBuilder("update a set dt2 = str_to_date('");
+			update.append(bo.getDt2());
+			update.append("', '%Y-%m-%d %T')");
 			if (bo.getIdg() != null) {
-				update.append("idg = ");
+				update.append(", idg = ");
 				update.append(bo.getIdg());
-				sep = ", ";
 			}
 			if (bo.getIdp() != null) {
-				update.append(sep);
-				sep = ", ";
-				update.append("idp = ");
+				update.append(", idp = ");
 				update.append(bo.getIdp());
 			}
 			if (bo.getIdc() != null) {
-				update.append(sep);
-				sep = ", ";
-				update.append("idc = ");
+				update.append(", idc = ");
 				update.append(bo.getIdc());
 			}
-			if (bo.getUsr() != null) {
-				update.append(sep);
-				sep = ", ";
-				update.append("usr = ");
-				update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getUsr()));
+			if (bo.getIdu() != null) {
+				update.append(", idu = ");
+				update.append(bo.getIdu());
 			}
-			if (bo.getVs1() != null) {
-				update.append(sep);
-				sep = ", ";
-				update.append("vs1 = ");
-				update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVs1()));
+			if (bo.getId1() != null) {
+				update.append(", id1 = ");
+				update.append(bo.getId1());
 			}
-			if (bo.getVs2() != null) {
-				update.append(sep);
-				sep = ", ";
-				update.append("vs2 = ");
-				update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVs2()));
+			if (bo.getId2() != null) {
+				update.append(", id2 = ");
+				update.append(bo.getId2());
+			}
+			if (bo.getId3() != null) {
+				update.append(", id3 = ");
+				update.append(bo.getId3());
+			}
+			if (bo.getVc1() != null) {
+				update.append(", vc1 = ");
+				update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc1()));
+			}
+			if (bo.getVc2() != null) {
+				update.append(", vc2 = ");
+				update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc2()));
+			}
+			if (bo.getVc3() != null) {
+				update.append(", vc3 = ");
+				update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc3()));
+			}
+			if (bo.getVc4() != null) {
+				update.append(", vc4 = ");
+				update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc4()));
+			}
+			if (bo.getVc5() != null) {
+				update.append(", vc5 = ");
+				update.append(EpeDbEntity.getToStringAsVarcharOrNull(bo.getVc5()));
 			}
 			update.append(" where id = ");
 			update.append(bo.getId());
 			if (this.executeUpdate(update.toString()) == 1) {
-				response.setBo(bo);
+				GrejResponse response2 = this.get(bo.getId());
 				logger.log(Level.INFO, "patchExisting - updated with id " + bo.getId());
+				return response2;
 			} else {
 				response.setError("Not updated with id " + bo.getId());
 				logger.log(Level.INFO, "patchExisting - not updated with id " + bo.getId());
@@ -194,11 +242,17 @@ public class GrejDao {
 		bo.setIdg(entity.getInteger("idg"));
 		bo.setIdp(entity.getInteger("idp"));
 		bo.setIdc(entity.getInteger("idc"));
-		bo.setUsr(entity.getString("usr"));
+		bo.setIdu(entity.getInteger("idu"));
+		bo.setId1(entity.getInteger("id1"));
+		bo.setId2(entity.getInteger("id2"));
+		bo.setId3(entity.getInteger("id3"));
 		bo.setDt1(entity.getToString("dt1", format));
 		bo.setDt2(entity.getToString("dt2", format));
-		bo.setVs1(entity.getString("vs1"));
-		bo.setVs2(entity.getString("vs2"));
+		bo.setVc1(entity.getString("vc1"));
+		bo.setVc2(entity.getString("vc2"));
+		bo.setVc3(entity.getString("vc3"));
+		bo.setVc4(entity.getString("vc4"));
+		bo.setVc5(entity.getString("vc5"));
 		return bo;
 	}
 

@@ -20,7 +20,7 @@ import com.softwarelma.grej.orm.GrejDao;
 @RestController
 public class GrejController {
 
-	private static final String CORS_ORIGIN = "http://localhost:4200";
+	private static final String CORS_ORIGIN = "http://localhost:4200";// http://localhost:4200,http://localhost:8080
 	private final GrejDao dao = new GrejDao();
 
 	public GrejController() {
@@ -38,7 +38,7 @@ public class GrejController {
 		return this.dao.get(id);
 	}
 
-	@CrossOrigin(origins = CORS_ORIGIN)
+	@CrossOrigin(origins = CORS_ORIGIN, allowedHeaders = "*")
 	@PostMapping(path = "/rest/postNew", consumes = "application/json", produces = "application/json")
 	public GrejResponse postNew(HttpServletResponse httpServletResponse, @RequestBody GrejBo bo) {
 		return this.dao.postNew(bo);
@@ -53,7 +53,7 @@ public class GrejController {
 	@CrossOrigin(origins = CORS_ORIGIN)
 	@PatchMapping("/rest/patchExisting")
 	public GrejResponse patchExisting(HttpServletResponse httpServletResponse, @RequestBody GrejBo bo) {
-		return null;
+		return this.dao.patchExisting(bo);
 	}
 
 }
